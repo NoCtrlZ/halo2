@@ -1,7 +1,7 @@
 //! This module provides common utilities, traits and structures for group,
 //! field and polynomial arithmetic.
 
-use super::multicore;
+use super::multicore::{self, prelude::*};
 pub use ff::Field;
 use group::{
     ff::{BatchInvert, PrimeField},
@@ -321,15 +321,9 @@ pub fn parallelize<T: Send, F: Fn(&mut [T], usize) + Send + Sync + Clone>(v: &mu
         chunk = n as usize;
     }
 
-    multicore::scope(|scope| {
-        for (chunk_num, v) in v.chunks_mut(chunk).enumerate() {
-            let f = f.clone();
-            scope.spawn(move |_| {
-                let start = chunk_num * chunk;
-                f(v, start);
-            });
-        }
-    });
+    v.chunks_mut(chunk)
+        .enumerate()
+        .for_each(|(chunk_num, v)| f(v, chunk_num * chunk));
 }
 
 fn log2_floor(num: usize) -> u32 {
