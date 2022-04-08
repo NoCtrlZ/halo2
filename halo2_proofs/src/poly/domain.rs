@@ -3,6 +3,7 @@
 
 use crate::{
     arithmetic::{best_fft, parallelize, FieldExt, Group},
+    multicore::prelude::*,
     plonk::Assigned,
 };
 
@@ -352,12 +353,7 @@ impl<G: Group> EvaluationDomain<G> {
 
     fn ifft(a: &mut [G], omega_inv: G::Scalar, log_n: u32, divisor: G::Scalar) {
         best_fft(a, omega_inv, log_n);
-        parallelize(a, |a, _| {
-            for a in a {
-                // Finish iFFT
-                a.group_scale(&divisor);
-            }
-        });
+        a.par_iter_mut().for_each(|a| a.group_scale(&divisor));
     }
 
     /// Get the size of the extended domain
