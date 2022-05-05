@@ -516,11 +516,12 @@
 <span id="496">496</span>
 <span id="497">497</span>
 <span id="498">498</span>
+<span id="499">499</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Chip implementing a Merkle hash using Sinsemilla as the hash function.</span>
 
 <span class="kw">use</span> <span class="ident">halo2_proofs</span>::{
     <span class="ident">circuit</span>::{<span class="ident">AssignedCell</span>, <span class="ident">Chip</span>, <span class="ident">Layouter</span>},
-    <span class="ident">plonk</span>::{<span class="ident">Advice</span>, <span class="ident">Column</span>, <span class="ident">ConstraintSystem</span>, <span class="ident">Error</span>, <span class="ident">Selector</span>},
+    <span class="ident">plonk</span>::{<span class="ident">Advice</span>, <span class="ident">Column</span>, <span class="ident">ConstraintSystem</span>, <span class="ident">Constraints</span>, <span class="ident">Error</span>, <span class="ident">Selector</span>},
     <span class="ident">poly::Rotation</span>,
 };
 <span class="kw">use</span> <span class="ident">pasta_curves</span>::{<span class="ident">arithmetic::FieldExt</span>, <span class="ident">pallas</span>};
@@ -543,7 +544,6 @@
     },
 };
 <span class="kw">use</span> <span class="ident">group::ff::PrimeField</span>;
-<span class="kw">use</span> <span class="ident">std::array</span>;
 
 <span class="doccomment">/// Configuration for the `MerkleChip` implementation.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
@@ -681,13 +681,15 @@
             <span class="comment">// &lt;https://zips.z.cash/protocol/protocol.pdf#merklepath&gt;</span>
             <span class="kw">let</span> <span class="ident">right_check</span> <span class="op">=</span> <span class="ident">b_2</span> <span class="op">+</span> <span class="ident">c_whole</span> <span class="op">*</span> <span class="ident">two_pow_5</span> <span class="op">-</span> <span class="ident">right_node</span>;
 
-            <span class="ident">array::IntoIter::new</span>([
-                (<span class="string">&quot;l_check&quot;</span>, <span class="ident">l_check</span>),
-                (<span class="string">&quot;left_check&quot;</span>, <span class="ident">left_check</span>),
-                (<span class="string">&quot;right_check&quot;</span>, <span class="ident">right_check</span>),
-                (<span class="string">&quot;b1_b2_check&quot;</span>, <span class="ident">b1_b2_check</span>),
-            ])
-            .<span class="ident">map</span>(<span class="kw">move</span> <span class="op">|</span>(<span class="ident">name</span>, <span class="ident">poly</span>)<span class="op">|</span> (<span class="ident">name</span>, <span class="ident">q_decompose</span>.<span class="ident">clone</span>() <span class="op">*</span> <span class="ident">poly</span>))
+            <span class="ident">Constraints::with_selector</span>(
+                <span class="ident">q_decompose</span>,
+                [
+                    (<span class="string">&quot;l_check&quot;</span>, <span class="ident">l_check</span>),
+                    (<span class="string">&quot;left_check&quot;</span>, <span class="ident">left_check</span>),
+                    (<span class="string">&quot;right_check&quot;</span>, <span class="ident">right_check</span>),
+                    (<span class="string">&quot;b1_b2_check&quot;</span>, <span class="ident">b1_b2_check</span>),
+                ],
+            )
         });
 
         <span class="ident">MerkleConfig</span> {
@@ -877,13 +879,13 @@
                 <span class="kw">let</span> <span class="ident">left</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">left</span>
                     .<span class="ident">to_le_bits</span>()
                     .<span class="ident">iter</span>()
-                    .<span class="ident">by_val</span>()
+                    .<span class="ident">by_vals</span>()
                     .<span class="ident">take</span>(<span class="ident">pallas::Base::NUM_BITS</span> <span class="kw">as</span> <span class="ident">usize</span>)
                     .<span class="ident">collect</span>();
                 <span class="kw">let</span> <span class="ident">right</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">right</span>
                     .<span class="ident">to_le_bits</span>()
                     .<span class="ident">iter</span>()
-                    .<span class="ident">by_val</span>()
+                    .<span class="ident">by_vals</span>()
                     .<span class="ident">take</span>(<span class="ident">pallas::Base::NUM_BITS</span> <span class="kw">as</span> <span class="ident">usize</span>)
                     .<span class="ident">collect</span>();
                 <span class="kw">let</span> <span class="ident">merkle_crh</span> <span class="op">=</span> <span class="ident">HashDomain::from_Q</span>(<span class="ident">Q</span>.<span class="ident">into</span>());
@@ -1015,5 +1017,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="halo2_gadgets" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.62.0-nightly (18f314e70 2022-04-24)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="halo2_gadgets" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.62.0-nightly (4c60a0ea5 2022-05-04)" ></div>
 </body></html>
