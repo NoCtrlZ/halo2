@@ -18,7 +18,9 @@
         </a><h2 class="location"></h2>
     </nav>
     <nav class="sidebar"><a class="sidebar-logo" href="../../../../halo2_gadgets/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../halo2_gadgets/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><div class="theme-picker hidden"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="22" height="22" alt="Pick another theme!" src="../../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../halo2_gadgets/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
+                                <a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div>
+                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -114,22 +116,14 @@
 <span id="94">94</span>
 <span id="95">95</span>
 <span id="96">96</span>
-<span id="97">97</span>
-<span id="98">98</span>
-<span id="99">99</span>
-<span id="100">100</span>
-<span id="101">101</span>
-<span id="102">102</span>
-<span id="103">103</span>
-<span id="104">104</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::primitives::sinsemilla</span>::{<span class="self">self</span>, <span class="ident">SINSEMILLA_S</span>};
-<span class="kw">use</span> <span class="ident">halo2_proofs</span>::{
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">halo2_proofs</span>::{
     <span class="ident">circuit::Layouter</span>,
     <span class="ident">plonk</span>::{<span class="ident">ConstraintSystem</span>, <span class="ident">Error</span>, <span class="ident">Expression</span>, <span class="ident">TableColumn</span>},
     <span class="ident">poly::Rotation</span>,
 };
 
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">CommitDomains</span>, <span class="ident">FixedPoints</span>, <span class="ident">HashDomains</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::sinsemilla::primitives</span>::{<span class="self">self</span> <span class="kw">as</span> <span class="ident">sinsemilla</span>, <span class="ident">SINSEMILLA_S</span>};
 <span class="kw">use</span> <span class="ident">pasta_curves</span>::{<span class="ident">arithmetic::FieldExt</span>, <span class="ident">pallas</span>};
 
 <span class="doccomment">/// Table containing independent generators S[0..2^k]</span>
@@ -163,33 +157,25 @@
         <span class="ident">meta</span>.<span class="ident">lookup</span>(<span class="op">|</span><span class="ident">meta</span><span class="op">|</span> {
             <span class="kw">let</span> <span class="ident">q_s1</span> <span class="op">=</span> <span class="ident">meta</span>.<span class="ident">query_selector</span>(<span class="ident">config</span>.<span class="ident">q_sinsemilla1</span>);
             <span class="kw">let</span> <span class="ident">q_s2</span> <span class="op">=</span> <span class="ident">meta</span>.<span class="ident">query_fixed</span>(<span class="ident">config</span>.<span class="ident">q_sinsemilla2</span>, <span class="ident">Rotation::cur</span>());
-            <span class="kw">let</span> <span class="ident">q_s3</span> <span class="op">=</span> {
-                <span class="kw">let</span> <span class="ident">one</span> <span class="op">=</span> <span class="ident">Expression::Constant</span>(<span class="ident">pallas::Base::one</span>());
-                <span class="ident">q_s2</span>.<span class="ident">clone</span>() <span class="op">*</span> (<span class="ident">q_s2</span>.<span class="ident">clone</span>() <span class="op">-</span> <span class="ident">one</span>)
-            };
+            <span class="kw">let</span> <span class="ident">q_s3</span> <span class="op">=</span> <span class="ident">config</span>.<span class="ident">q_s3</span>(<span class="ident">meta</span>);
+            <span class="kw">let</span> <span class="ident">q_run</span> <span class="op">=</span> <span class="ident">q_s2</span> <span class="op">-</span> <span class="ident">q_s3</span>;
 
-            <span class="comment">// m_{i+1} = z_{i} - 2^K * (q_s2 - q_s3) * z_{i + 1}</span>
+            <span class="comment">// m_{i+1} = z_{i} - 2^K * q_{run,i} * z_{i + 1}</span>
             <span class="comment">// Note that the message words m_i&#39;s are 1-indexed while the</span>
             <span class="comment">// running sum z_i&#39;s are 0-indexed.</span>
             <span class="kw">let</span> <span class="ident">word</span> <span class="op">=</span> {
                 <span class="kw">let</span> <span class="ident">z_cur</span> <span class="op">=</span> <span class="ident">meta</span>.<span class="ident">query_advice</span>(<span class="ident">config</span>.<span class="ident">bits</span>, <span class="ident">Rotation::cur</span>());
                 <span class="kw">let</span> <span class="ident">z_next</span> <span class="op">=</span> <span class="ident">meta</span>.<span class="ident">query_advice</span>(<span class="ident">config</span>.<span class="ident">bits</span>, <span class="ident">Rotation::next</span>());
-                <span class="ident">z_cur</span> <span class="op">-</span> ((<span class="ident">q_s2</span> <span class="op">-</span> <span class="ident">q_s3</span>) <span class="op">*</span> <span class="ident">z_next</span> <span class="op">*</span> <span class="ident">pallas::Base::from</span>(<span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">sinsemilla::K</span>))
+                <span class="ident">z_cur</span> <span class="op">-</span> (<span class="ident">q_run</span> <span class="op">*</span> <span class="ident">z_next</span> <span class="op">*</span> <span class="ident">pallas::Base::from</span>(<span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">sinsemilla::K</span>))
             };
 
-            <span class="kw">let</span> <span class="ident">x_p</span> <span class="op">=</span> <span class="ident">meta</span>.<span class="ident">query_advice</span>(<span class="ident">config</span>.<span class="ident">x_p</span>, <span class="ident">Rotation::cur</span>());
+            <span class="kw">let</span> <span class="ident">x_p</span> <span class="op">=</span> <span class="ident">meta</span>.<span class="ident">query_advice</span>(<span class="ident">config</span>.<span class="ident">double_and_add</span>.<span class="ident">x_p</span>, <span class="ident">Rotation::cur</span>());
 
-            <span class="comment">// y_{p,i} = (Y_{A,i} / 2) - lambda1 * (x_{A,i} - x_{P,i}),</span>
-            <span class="comment">// where Y_{A,i} = (lambda1_i + lambda2_i) * (x_{A,i} - x_{R,i}),</span>
-            <span class="comment">//       x_{R,i} = lambda1^2 - x_{A,i} - x_{P,i}</span>
-            <span class="comment">//</span>
+            <span class="comment">// y_{p,i} = (Y_{A,i} / 2) - lambda1 * (x_{A,i} - x_{P,i})</span>
             <span class="kw">let</span> <span class="ident">y_p</span> <span class="op">=</span> {
-                <span class="kw">let</span> <span class="ident">lambda1</span> <span class="op">=</span> <span class="ident">meta</span>.<span class="ident">query_advice</span>(<span class="ident">config</span>.<span class="ident">lambda_1</span>, <span class="ident">Rotation::cur</span>());
-                <span class="kw">let</span> <span class="ident">lambda2</span> <span class="op">=</span> <span class="ident">meta</span>.<span class="ident">query_advice</span>(<span class="ident">config</span>.<span class="ident">lambda_2</span>, <span class="ident">Rotation::cur</span>());
-                <span class="kw">let</span> <span class="ident">x_a</span> <span class="op">=</span> <span class="ident">meta</span>.<span class="ident">query_advice</span>(<span class="ident">config</span>.<span class="ident">x_a</span>, <span class="ident">Rotation::cur</span>());
-
-                <span class="kw">let</span> <span class="ident">x_r</span> <span class="op">=</span> <span class="ident">lambda1</span>.<span class="ident">clone</span>().<span class="ident">square</span>() <span class="op">-</span> <span class="ident">x_a</span>.<span class="ident">clone</span>() <span class="op">-</span> <span class="ident">x_p</span>.<span class="ident">clone</span>();
-                <span class="kw">let</span> <span class="ident">Y_A</span> <span class="op">=</span> (<span class="ident">lambda1</span>.<span class="ident">clone</span>() <span class="op">+</span> <span class="ident">lambda2</span>) <span class="op">*</span> (<span class="ident">x_a</span>.<span class="ident">clone</span>() <span class="op">-</span> <span class="ident">x_r</span>);
+                <span class="kw">let</span> <span class="ident">lambda1</span> <span class="op">=</span> <span class="ident">meta</span>.<span class="ident">query_advice</span>(<span class="ident">config</span>.<span class="ident">double_and_add</span>.<span class="ident">lambda_1</span>, <span class="ident">Rotation::cur</span>());
+                <span class="kw">let</span> <span class="ident">x_a</span> <span class="op">=</span> <span class="ident">meta</span>.<span class="ident">query_advice</span>(<span class="ident">config</span>.<span class="ident">double_and_add</span>.<span class="ident">x_a</span>, <span class="ident">Rotation::cur</span>());
+                <span class="kw">let</span> <span class="ident">Y_A</span> <span class="op">=</span> <span class="ident">config</span>.<span class="ident">double_and_add</span>.<span class="ident">Y_A</span>(<span class="ident">meta</span>, <span class="ident">Rotation::cur</span>());
 
                 (<span class="ident">Y_A</span> <span class="op">*</span> <span class="ident">pallas::Base::TWO_INV</span>) <span class="op">-</span> (<span class="ident">lambda1</span> <span class="op">*</span> (<span class="ident">x_a</span> <span class="op">-</span> <span class="ident">x_p</span>.<span class="ident">clone</span>()))
             };
@@ -227,5 +213,5 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="halo2_gadgets" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.62.0-nightly (77652b9ef 2022-05-06)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="halo2_gadgets" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0-nightly (c06728704 2022-05-19)" ></div>
 </body></html>

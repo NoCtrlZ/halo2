@@ -18,7 +18,9 @@
         </a><h2 class="location"></h2>
     </nav>
     <nav class="sidebar"><a class="sidebar-logo" href="../../../halo2_gadgets/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../halo2_gadgets/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><div class="theme-picker hidden"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="22" height="22" alt="Pick another theme!" src="../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../halo2_gadgets/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
+                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
+                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -909,7 +911,6 @@
 <span id="889">889</span>
 <span id="890">890</span>
 <span id="891">891</span>
-<span id="892">892</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::convert::TryInto</span>;
 <span class="kw">use</span> <span class="ident">std::iter</span>;
 
@@ -922,12 +923,11 @@
     <span class="ident">poly::Rotation</span>,
 };
 
-<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">PaddedWord</span>, <span class="ident">PoseidonInstructions</span>, <span class="ident">PoseidonSpongeInstructions</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::primitives::poseidon</span>::{<span class="ident">Domain</span>, <span class="ident">Mds</span>, <span class="ident">Spec</span>, <span class="ident">State</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">primitives::poseidon</span>::{<span class="ident">Absorbing</span>, <span class="ident">Squeezing</span>},
-    <span class="ident">utilities::Var</span>,
+<span class="kw">use</span> <span class="kw">super</span>::{
+    <span class="ident">primitives</span>::{<span class="ident">Absorbing</span>, <span class="ident">Domain</span>, <span class="ident">Mds</span>, <span class="ident">Spec</span>, <span class="ident">Squeezing</span>, <span class="ident">State</span>},
+    <span class="ident">PaddedWord</span>, <span class="ident">PoseidonInstructions</span>, <span class="ident">PoseidonSpongeInstructions</span>,
 };
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utilities::Var</span>;
 
 <span class="doccomment">/// Configuration for a [`Pow5Chip`].</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
@@ -1520,9 +1520,9 @@
     <span class="kw">use</span> <span class="ident">rand::rngs::OsRng</span>;
 
     <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">PoseidonInstructions</span>, <span class="ident">Pow5Chip</span>, <span class="ident">Pow5Config</span>, <span class="ident">StateWord</span>};
-    <span class="kw">use</span> <span class="kw">crate</span>::{
-        <span class="ident">poseidon::Hash</span>,
-        <span class="ident">primitives::poseidon</span>::{<span class="self">self</span>, <span class="ident">ConstantLength</span>, <span class="ident">P128Pow5T3</span> <span class="kw">as</span> <span class="ident">OrchardNullifier</span>, <span class="ident">Spec</span>},
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::poseidon</span>::{
+        <span class="ident">primitives</span>::{<span class="self">self</span> <span class="kw">as</span> <span class="ident">poseidon</span>, <span class="ident">ConstantLength</span>, <span class="ident">P128Pow5T3</span> <span class="kw">as</span> <span class="ident">OrchardNullifier</span>, <span class="ident">Spec</span>},
+        <span class="ident">Hash</span>,
     };
     <span class="kw">use</span> <span class="ident">std::convert::TryInto</span>;
     <span class="kw">use</span> <span class="ident">std::marker::PhantomData</span>;
@@ -1762,7 +1762,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">hash_test_vectors</span>() {
-        <span class="kw">for</span> <span class="ident">tv</span> <span class="kw">in</span> <span class="ident"><span class="kw">crate</span>::primitives::poseidon::test_vectors::fp::hash</span>() {
+        <span class="kw">for</span> <span class="ident">tv</span> <span class="kw">in</span> <span class="ident"><span class="kw">crate</span>::poseidon::primitives::test_vectors::fp::hash</span>() {
             <span class="kw">let</span> <span class="ident">message</span> <span class="op">=</span> [
                 <span class="ident">pallas::Base::from_repr</span>(<span class="ident">tv</span>.<span class="ident">input</span>[<span class="number">0</span>]).<span class="ident">unwrap</span>(),
                 <span class="ident">pallas::Base::from_repr</span>(<span class="ident">tv</span>.<span class="ident">input</span>[<span class="number">1</span>]).<span class="ident">unwrap</span>(),
@@ -1803,5 +1803,5 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="halo2_gadgets" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.62.0-nightly (77652b9ef 2022-05-06)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="halo2_gadgets" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0-nightly (c06728704 2022-05-19)" ></div>
 </body></html>
