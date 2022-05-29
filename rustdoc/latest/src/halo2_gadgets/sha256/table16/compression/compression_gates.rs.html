@@ -632,7 +632,7 @@
         <span class="ident">spread_c_mid</span>: <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>,
         <span class="ident">spread_c_hi</span>: <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>,
         <span class="ident">spread_d</span>: <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">spread_witness</span> <span class="op">=</span> <span class="ident">spread_r0_even</span>
             <span class="op">+</span> <span class="ident">spread_r0_odd</span> <span class="op">*</span> <span class="ident">F::from</span>(<span class="number">2</span>)
             <span class="op">+</span> (<span class="ident">spread_r1_even</span> <span class="op">+</span> <span class="ident">spread_r1_odd</span> <span class="op">*</span> <span class="ident">F::from</span>(<span class="number">2</span>)) <span class="op">*</span> <span class="ident">F::from</span>(<span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">32</span>);
@@ -657,7 +657,7 @@
         <span class="kw">let</span> <span class="ident">xor</span> <span class="op">=</span> <span class="ident">xor_0</span> <span class="op">+</span> <span class="ident">xor_1</span> <span class="op">+</span> <span class="ident">xor_2</span>;
         <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="ident">spread_witness</span> <span class="op">+</span> (<span class="ident">xor</span> <span class="op">*</span> <span class="op">-</span><span class="ident">F::one</span>());
 
-        <span class="ident">std::iter::empty</span>().<span class="ident">chain</span>(<span class="prelude-val">Some</span>((<span class="string">&quot;s_upper_sigma_0&quot;</span>, <span class="ident">s_upper_sigma_0</span> <span class="op">*</span> <span class="ident">check</span>)))
+        <span class="prelude-val">Some</span>((<span class="string">&quot;s_upper_sigma_0&quot;</span>, <span class="ident">s_upper_sigma_0</span> <span class="op">*</span> <span class="ident">check</span>))
     }
 
     <span class="comment">// s_upper_sigma_1 on efgh words</span>
@@ -675,7 +675,7 @@
         <span class="ident">spread_b_hi</span>: <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>,
         <span class="ident">spread_c</span>: <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>,
         <span class="ident">spread_d</span>: <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">spread_witness</span> <span class="op">=</span> <span class="ident">spread_r0_even</span>
             <span class="op">+</span> <span class="ident">spread_r0_odd</span> <span class="op">*</span> <span class="ident">F::from</span>(<span class="number">2</span>)
             <span class="op">+</span> (<span class="ident">spread_r1_even</span> <span class="op">+</span> <span class="ident">spread_r1_odd</span> <span class="op">*</span> <span class="ident">F::from</span>(<span class="number">2</span>)) <span class="op">*</span> <span class="ident">F::from</span>(<span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">32</span>);
@@ -701,7 +701,7 @@
         <span class="kw">let</span> <span class="ident">xor</span> <span class="op">=</span> <span class="ident">xor_0</span> <span class="op">+</span> <span class="ident">xor_1</span> <span class="op">+</span> <span class="ident">xor_2</span>;
         <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="ident">spread_witness</span> <span class="op">+</span> (<span class="ident">xor</span> <span class="op">*</span> <span class="op">-</span><span class="ident">F::one</span>());
 
-        <span class="ident">std::iter::empty</span>().<span class="ident">chain</span>(<span class="prelude-val">Some</span>((<span class="string">&quot;s_upper_sigma_1&quot;</span>, <span class="ident">s_upper_sigma_1</span> <span class="op">*</span> <span class="ident">check</span>)))
+        <span class="prelude-val">Some</span>((<span class="string">&quot;s_upper_sigma_1&quot;</span>, <span class="ident">s_upper_sigma_1</span> <span class="op">*</span> <span class="ident">check</span>))
     }
 
     <span class="comment">// First part of choice gate on (E, F, G), E ∧ F</span>
@@ -716,7 +716,7 @@
         <span class="ident">spread_e_hi</span>: <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>,
         <span class="ident">spread_f_lo</span>: <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>,
         <span class="ident">spread_f_hi</span>: <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">lhs_lo</span> <span class="op">=</span> <span class="ident">spread_e_lo</span> <span class="op">+</span> <span class="ident">spread_f_lo</span>;
         <span class="kw">let</span> <span class="ident">lhs_hi</span> <span class="op">=</span> <span class="ident">spread_e_hi</span> <span class="op">+</span> <span class="ident">spread_f_hi</span>;
         <span class="kw">let</span> <span class="ident">lhs</span> <span class="op">=</span> <span class="ident">lhs_lo</span> <span class="op">+</span> <span class="ident">lhs_hi</span> <span class="op">*</span> <span class="ident">F::from</span>(<span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">32</span>);
@@ -727,7 +727,7 @@
 
         <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="ident">lhs</span> <span class="op">+</span> <span class="ident">rhs</span> <span class="op">*</span> <span class="op">-</span><span class="ident">F::one</span>();
 
-        <span class="ident">std::iter::empty</span>().<span class="ident">chain</span>(<span class="prelude-val">Some</span>((<span class="string">&quot;s_ch&quot;</span>, <span class="ident">s_ch</span> <span class="op">*</span> <span class="ident">check</span>)))
+        <span class="prelude-val">Some</span>((<span class="string">&quot;s_ch&quot;</span>, <span class="ident">s_ch</span> <span class="op">*</span> <span class="ident">check</span>))
     }
 
     <span class="comment">// Second part of Choice gate on (E, F, G), ¬E ∧ G</span>
@@ -786,7 +786,7 @@
         <span class="ident">spread_b_hi</span>: <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>,
         <span class="ident">spread_c_lo</span>: <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>,
         <span class="ident">spread_c_hi</span>: <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">maj_even</span> <span class="op">=</span> <span class="ident">spread_m_0_even</span> <span class="op">+</span> <span class="ident">spread_m_1_even</span> <span class="op">*</span> <span class="ident">F::from</span>(<span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">32</span>);
         <span class="kw">let</span> <span class="ident">maj_odd</span> <span class="op">=</span> <span class="ident">spread_m_0_odd</span> <span class="op">+</span> <span class="ident">spread_m_1_odd</span> <span class="op">*</span> <span class="ident">F::from</span>(<span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">32</span>);
         <span class="kw">let</span> <span class="ident">maj</span> <span class="op">=</span> <span class="ident">maj_even</span> <span class="op">+</span> <span class="ident">maj_odd</span> <span class="op">*</span> <span class="ident">F::from</span>(<span class="number">2</span>);
@@ -796,7 +796,7 @@
         <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">spread_c_lo</span> <span class="op">+</span> <span class="ident">spread_c_hi</span> <span class="op">*</span> <span class="ident">F::from</span>(<span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">32</span>);
         <span class="kw">let</span> <span class="ident">sum</span> <span class="op">=</span> <span class="ident">a</span> <span class="op">+</span> <span class="ident">b</span> <span class="op">+</span> <span class="ident">c</span>;
 
-        <span class="ident">std::iter::empty</span>().<span class="ident">chain</span>(<span class="prelude-val">Some</span>((<span class="string">&quot;maj&quot;</span>, <span class="ident">s_maj</span> <span class="op">*</span> (<span class="ident">sum</span> <span class="op">-</span> <span class="ident">maj</span>))))
+        <span class="prelude-val">Some</span>((<span class="string">&quot;maj&quot;</span>, <span class="ident">s_maj</span> <span class="op">*</span> (<span class="ident">sum</span> <span class="op">-</span> <span class="ident">maj</span>)))
     }
 
     <span class="comment">// s_h_prime to get H&#39; = H + Ch(E, F, G) + s_upper_sigma_1(E) + K + W</span>
@@ -818,7 +818,7 @@
         <span class="ident">k_hi</span>: <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>,
         <span class="ident">w_lo</span>: <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>,
         <span class="ident">w_hi</span>: <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">lo</span> <span class="op">=</span> <span class="ident">h_lo</span> <span class="op">+</span> <span class="ident">ch_lo</span> <span class="op">+</span> <span class="ident">ch_neg_lo</span> <span class="op">+</span> <span class="ident">sigma_e_lo</span> <span class="op">+</span> <span class="ident">k_lo</span> <span class="op">+</span> <span class="ident">w_lo</span>;
         <span class="kw">let</span> <span class="ident">hi</span> <span class="op">=</span> <span class="ident">h_hi</span> <span class="op">+</span> <span class="ident">ch_hi</span> <span class="op">+</span> <span class="ident">ch_neg_hi</span> <span class="op">+</span> <span class="ident">sigma_e_hi</span> <span class="op">+</span> <span class="ident">k_hi</span> <span class="op">+</span> <span class="ident">w_hi</span>;
 
@@ -827,7 +827,7 @@
 
         <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="ident">sum</span> <span class="op">-</span> (<span class="ident">h_prime_carry</span> <span class="op">*</span> <span class="ident">F::from</span>(<span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">32</span>)) <span class="op">-</span> <span class="ident">h_prime</span>;
 
-        <span class="ident">std::iter::empty</span>().<span class="ident">chain</span>(<span class="prelude-val">Some</span>((<span class="string">&quot;s_h_prime&quot;</span>, <span class="ident">s_h_prime</span> <span class="op">*</span> <span class="ident">check</span>)))
+        <span class="prelude-val">Some</span>((<span class="string">&quot;s_h_prime&quot;</span>, <span class="ident">s_h_prime</span> <span class="op">*</span> <span class="ident">check</span>))
     }
 
     <span class="comment">// s_a_new to get A_new = H&#39; + Maj(A, B, C) + s_upper_sigma_0(A)</span>
@@ -843,7 +843,7 @@
         <span class="ident">maj_abc_hi</span>: <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>,
         <span class="ident">h_prime_lo</span>: <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>,
         <span class="ident">h_prime_hi</span>: <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">lo</span> <span class="op">=</span> <span class="ident">sigma_a_lo</span> <span class="op">+</span> <span class="ident">maj_abc_lo</span> <span class="op">+</span> <span class="ident">h_prime_lo</span>;
         <span class="kw">let</span> <span class="ident">hi</span> <span class="op">=</span> <span class="ident">sigma_a_hi</span> <span class="op">+</span> <span class="ident">maj_abc_hi</span> <span class="op">+</span> <span class="ident">h_prime_hi</span>;
         <span class="kw">let</span> <span class="ident">sum</span> <span class="op">=</span> <span class="ident">lo</span> <span class="op">+</span> <span class="ident">hi</span> <span class="op">*</span> <span class="ident">F::from</span>(<span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">16</span>);
@@ -851,7 +851,7 @@
 
         <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="ident">sum</span> <span class="op">-</span> (<span class="ident">a_new_carry</span> <span class="op">*</span> <span class="ident">F::from</span>(<span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">32</span>)) <span class="op">-</span> <span class="ident">a_new</span>;
 
-        <span class="ident">std::iter::empty</span>().<span class="ident">chain</span>(<span class="prelude-val">Some</span>((<span class="string">&quot;s_a_new&quot;</span>, <span class="ident">s_a_new</span> <span class="op">*</span> <span class="ident">check</span>)))
+        <span class="prelude-val">Some</span>((<span class="string">&quot;s_a_new&quot;</span>, <span class="ident">s_a_new</span> <span class="op">*</span> <span class="ident">check</span>))
     }
 
     <span class="comment">// s_e_new to get E_new = H&#39; + D</span>
@@ -865,7 +865,7 @@
         <span class="ident">d_hi</span>: <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>,
         <span class="ident">h_prime_lo</span>: <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>,
         <span class="ident">h_prime_hi</span>: <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">Expression</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">lo</span> <span class="op">=</span> <span class="ident">h_prime_lo</span> <span class="op">+</span> <span class="ident">d_lo</span>;
         <span class="kw">let</span> <span class="ident">hi</span> <span class="op">=</span> <span class="ident">h_prime_hi</span> <span class="op">+</span> <span class="ident">d_hi</span>;
         <span class="kw">let</span> <span class="ident">sum</span> <span class="op">=</span> <span class="ident">lo</span> <span class="op">+</span> <span class="ident">hi</span> <span class="op">*</span> <span class="ident">F::from</span>(<span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">16</span>);
@@ -873,7 +873,7 @@
 
         <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="ident">sum</span> <span class="op">-</span> (<span class="ident">e_new_carry</span> <span class="op">*</span> <span class="ident">F::from</span>(<span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">32</span>)) <span class="op">-</span> <span class="ident">e_new</span>;
 
-        <span class="ident">std::iter::empty</span>().<span class="ident">chain</span>(<span class="prelude-val">Some</span>((<span class="string">&quot;s_e_new&quot;</span>, <span class="ident">s_e_new</span> <span class="op">*</span> <span class="ident">check</span>)))
+        <span class="prelude-val">Some</span>((<span class="string">&quot;s_e_new&quot;</span>, <span class="ident">s_e_new</span> <span class="op">*</span> <span class="ident">check</span>))
     }
 
     <span class="comment">// s_digest on final round</span>
@@ -909,5 +909,5 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="halo2_gadgets" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0-nightly (c06728704 2022-05-19)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="halo2_gadgets" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0-nightly (ebbcbfc23 2022-05-27)" ></div>
 </body></html>
