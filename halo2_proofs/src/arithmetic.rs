@@ -28,31 +28,31 @@ fn parallel_multiexp<C: CurveAffine>(coeffs: &[C::Scalar], bases: &[C]) -> C::Cu
 
     buckets
         .iter_mut()
+        .enumerate()
         .rev()
-        .zip((0..segments).rev())
-        .for_each(|(bucket, i)| {
+        .map(|(i, bucket)| {
             for (coeff, base) in coeffs.iter().zip(bases.iter()) {
                 let coeff = get_at::<C::Scalar>(i, c, coeff);
                 if coeff != 0 {
                     bucket[coeff - 1].add_assign(base);
                 }
             }
+            bucket
+        })
+        .for_each(|bucket| {
+            for _ in 0..c {
+                acc = acc.double();
+            }
+            // Summation by parts
+            // e.g. 3a + 2b + 1c = a +
+            //                    (a) + b +
+            //                    ((a) + b) + c
+            let mut running_sum = C::Curve::identity();
+            for exp in bucket.iter().rev() {
+                running_sum = exp.add(running_sum);
+                acc += &running_sum;
+            }
         });
-
-    buckets.iter().rev().for_each(|bucket| {
-        for _ in 0..c {
-            acc = acc.double();
-        }
-        // Summation by parts
-        // e.g. 3a + 2b + 1c = a +
-        //                    (a) + b +
-        //                    ((a) + b) + c
-        let mut running_sum = C::Curve::identity();
-        for exp in bucket.iter().rev() {
-            running_sum = exp.add(running_sum);
-            acc += &running_sum;
-        }
-    });
 
     acc
 }
