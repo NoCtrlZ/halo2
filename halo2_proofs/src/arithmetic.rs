@@ -416,6 +416,12 @@ use rand_core::OsRng;
 #[cfg(test)]
 use crate::pasta::Fp;
 
+#[cfg(test)]
+use crate::poly::commitment::Params;
+
+#[cfg(test)]
+use crate::pasta::EqAffine;
+
 #[test]
 fn test_lagrange_interpolate() {
     let rng = OsRng;
@@ -433,5 +439,20 @@ fn test_lagrange_interpolate() {
         for (point, eval) in points.iter().zip(evals) {
             assert_eq!(eval_polynomial(&poly, *point), *eval);
         }
+    }
+}
+
+#[test]
+fn test_multi_exponentiation() {
+    for k in 3..8 {
+        let coeffs = (0..(1 << k)).map(|_| Fp::random(OsRng)).collect::<Vec<_>>();
+        let params: Params<EqAffine> = Params::new(k);
+        let g_a = &mut params.get_g();
+        let g_b = &mut params.get_g();
+
+        let point_a = small_multiexp(&coeffs, &g_a);
+        let point_b = best_multiexp(&coeffs, &g_b);
+
+        assert_eq!(point_a, point_b);
     }
 }
