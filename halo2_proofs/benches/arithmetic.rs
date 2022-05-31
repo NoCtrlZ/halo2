@@ -16,7 +16,7 @@ fn criterion_benchmark(c: &mut Criterion) {
     // small multiexp
     {
         let mut small_group = c.benchmark_group("arithmetic-small_multiexp");
-        for k in 3..10 {
+        for k in 3..19 {
             small_group.bench_function(BenchmarkId::new("k", k), |b| {
                 let params: Params<EqAffine> = Params::new(k);
                 let g = &mut params.get_g();
@@ -36,7 +36,7 @@ fn criterion_benchmark(c: &mut Criterion) {
         small_group.finish();
 
         let mut best_group = c.benchmark_group("arithmetic-best_multiexp");
-        for k in 3..10 {
+        for k in 3..19 {
             let params: Params<EqAffine> = Params::new(k);
             let g = &mut params.get_g();
             let len = g.len() / 2;

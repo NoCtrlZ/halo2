@@ -12,14 +12,7 @@ use multiexp::{get_at, Bucket};
 pub use pasta_curves::arithmetic::*;
 
 fn parallel_multiexp<C: CurveAffine>(coeffs: &[C::Scalar], bases: &[C]) -> C::Curve {
-    let c = if bases.len() < 4 {
-        1
-    } else if bases.len() < 32 {
-        3
-    } else {
-        (f64::from(bases.len() as u32)).ln().ceil() as usize
-    };
-
+    let c = (f64::from(bases.len() as u32)).ln().ceil() as usize;
     let mut buckets: Vec<Vec<Bucket<C>>> = vec![vec![Bucket::None; (1 << c) - 1]; (256 / c) + 1];
 
     buckets
@@ -28,9 +21,9 @@ fn parallel_multiexp<C: CurveAffine>(coeffs: &[C::Scalar], bases: &[C]) -> C::Cu
         .rev()
         .map(|(i, bucket)| {
             for (coeff, base) in coeffs.iter().zip(bases.iter()) {
-                let coeff = get_at::<C::Scalar>(i, c, &coeff.to_repr());
-                if coeff != 0 {
-                    bucket[coeff - 1].add_assign(base);
+                let seg = get_at::<C::Scalar>(i, c, &coeff.to_repr());
+                if seg != 0 {
+                    bucket[seg - 1].add_assign(base);
                 }
             }
             bucket
@@ -82,9 +75,10 @@ pub fn serial_multiexp<C: CurveAffine>(coeffs: &[C::Scalar], bases: &[C]) -> C::
 ///
 /// This will use multithreading if beneficial.
 pub fn best_multiexp<C: CurveAffine>(coeffs: &[C::Scalar], bases: &[C]) -> C::Curve {
-    assert_eq!(coeffs.len(), bases.len());
+    let n = coeffs.len();
+    assert_eq!(n, bases.len());
 
-    if coeffs.len() > threads() {
+    if n > threads() && n > 32 {
         parallel_multiexp(coeffs, bases)
     } else {
         serial_multiexp(coeffs, bases)
