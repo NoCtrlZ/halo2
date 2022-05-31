@@ -24,31 +24,35 @@ fn parallel_multiexp<C: CurveAffine>(coeffs: &[C::Scalar], bases: &[C]) -> C::Cu
     };
 
     let segments = (256 / c) + 1;
+    let mut buckets: Vec<Vec<Bucket<C>>> = vec![vec![Bucket::None; (1 << c) - 1]; segments];
 
-    for current_segment in (0..segments).rev() {
+    buckets
+        .iter_mut()
+        .rev()
+        .zip((0..segments).rev())
+        .for_each(|(bucket, i)| {
+            for (coeff, base) in coeffs.iter().zip(bases.iter()) {
+                let coeff = get_at::<C::Scalar>(i, c, coeff);
+                if coeff != 0 {
+                    bucket[coeff - 1].add_assign(base);
+                }
+            }
+        });
+
+    buckets.iter().rev().for_each(|bucket| {
         for _ in 0..c {
             acc = acc.double();
         }
-
-        let mut buckets: Vec<Bucket<C>> = vec![Bucket::None; (1 << c) - 1];
-
-        for (coeff, base) in coeffs.iter().zip(bases.iter()) {
-            let coeff = get_at::<C::Scalar>(current_segment, c, coeff);
-            if coeff != 0 {
-                buckets[coeff - 1].add_assign(base);
-            }
-        }
-
         // Summation by parts
         // e.g. 3a + 2b + 1c = a +
         //                    (a) + b +
         //                    ((a) + b) + c
         let mut running_sum = C::Curve::identity();
-        for exp in buckets.into_iter().rev() {
+        for exp in bucket.iter().rev() {
             running_sum = exp.add(running_sum);
             acc += &running_sum;
         }
-    }
+    });
 
     acc
 }
