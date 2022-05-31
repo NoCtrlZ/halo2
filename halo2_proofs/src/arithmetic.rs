@@ -12,9 +12,6 @@ use multiexp::{get_at, Bucket};
 pub use pasta_curves::arithmetic::*;
 
 fn parallel_multiexp<C: CurveAffine>(coeffs: &[C::Scalar], bases: &[C]) -> C::Curve {
-    let mut acc = C::Curve::identity();
-    let coeffs: Vec<_> = coeffs.iter().map(|a| a.to_repr()).collect();
-
     let c = if bases.len() < 4 {
         1
     } else if bases.len() < 32 {
@@ -23,8 +20,7 @@ fn parallel_multiexp<C: CurveAffine>(coeffs: &[C::Scalar], bases: &[C]) -> C::Cu
         (f64::from(bases.len() as u32)).ln().ceil() as usize
     };
 
-    let segments = (256 / c) + 1;
-    let mut buckets: Vec<Vec<Bucket<C>>> = vec![vec![Bucket::None; (1 << c) - 1]; segments];
+    let mut buckets: Vec<Vec<Bucket<C>>> = vec![vec![Bucket::None; (1 << c) - 1]; (256 / c) + 1];
 
     buckets
         .iter_mut()
@@ -32,29 +28,28 @@ fn parallel_multiexp<C: CurveAffine>(coeffs: &[C::Scalar], bases: &[C]) -> C::Cu
         .rev()
         .map(|(i, bucket)| {
             for (coeff, base) in coeffs.iter().zip(bases.iter()) {
-                let coeff = get_at::<C::Scalar>(i, c, coeff);
+                let coeff = get_at::<C::Scalar>(i, c, &coeff.to_repr());
                 if coeff != 0 {
                     bucket[coeff - 1].add_assign(base);
                 }
             }
             bucket
         })
-        .for_each(|bucket| {
+        .fold(C::Curve::identity(), |mut sum, bucket| {
             for _ in 0..c {
-                acc = acc.double();
+                sum = sum.double();
             }
             // Summation by parts
             // e.g. 3a + 2b + 1c = a +
             //                    (a) + b +
             //                    ((a) + b) + c
             let mut running_sum = C::Curve::identity();
-            for exp in bucket.iter().rev() {
+            bucket.iter().rev().for_each(|exp| {
                 running_sum = exp.add(running_sum);
-                acc += &running_sum;
-            }
-        });
-
-    acc
+                sum += &running_sum;
+            });
+            sum
+        })
 }
 
 /// Performs a small multi-exponentiation operation.
