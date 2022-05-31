@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate criterion;
 
-use crate::arithmetic::{best_multiexp, small_multiexp};
+use crate::arithmetic::{best_multiexp, serial_multiexp};
 use crate::pasta::{EqAffine, Fp};
 use crate::poly::commitment::Params;
 use group::ff::Field;
@@ -28,7 +28,7 @@ fn criterion_benchmark(c: &mut Criterion) {
 
                 b.iter(|| {
                     for (g_lo, g_hi) in g_lo.iter().zip(g_hi.iter()) {
-                        small_multiexp(&[black_box(coeff_1), black_box(coeff_2)], &[*g_lo, *g_hi]);
+                        serial_multiexp(&[black_box(coeff_1), black_box(coeff_2)], &[*g_lo, *g_hi]);
                     }
                 })
             });

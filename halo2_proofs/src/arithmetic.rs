@@ -1,7 +1,7 @@
 //! This module provides common utilities, traits and structures for group,
 //! field and polynomial arithmetic.
 
-use super::multicore::{self, prelude::*};
+use super::multicore::{self, prelude::*, threads};
 pub use ff::Field;
 use group::{
     ff::{BatchInvert, PrimeField},
@@ -11,7 +11,8 @@ mod multiexp;
 use multiexp::{get_at, Bucket};
 pub use pasta_curves::arithmetic::*;
 
-fn multiexp_serial<C: CurveAffine>(coeffs: &[C::Scalar], bases: &[C], acc: &mut C::Curve) {
+fn parallel_multiexp<C: CurveAffine>(coeffs: &[C::Scalar], bases: &[C]) -> C::Curve {
+    let mut acc = C::Curve::identity();
     let coeffs: Vec<_> = coeffs.iter().map(|a| a.to_repr()).collect();
 
     let c = if bases.len() < 4 {
@@ -26,7 +27,7 @@ fn multiexp_serial<C: CurveAffine>(coeffs: &[C::Scalar], bases: &[C], acc: &mut 
 
     for current_segment in (0..segments).rev() {
         for _ in 0..c {
-            *acc = acc.double();
+            acc = acc.double();
         }
 
         let mut buckets: Vec<Bucket<C>> = vec![Bucket::None; (1 << c) - 1];
@@ -45,15 +46,16 @@ fn multiexp_serial<C: CurveAffine>(coeffs: &[C::Scalar], bases: &[C], acc: &mut 
         let mut running_sum = C::Curve::identity();
         for exp in buckets.into_iter().rev() {
             running_sum = exp.add(running_sum);
-            *acc = *acc + &running_sum;
+            acc += &running_sum;
         }
     }
+
+    acc
 }
 
 /// Performs a small multi-exponentiation operation.
 /// Uses the double-and-add algorithm with doublings shared across points.
-pub fn small_multiexp<C: CurveAffine>(coeffs: &[C::Scalar], bases: &[C]) -> C::Curve {
-    let coeffs: Vec<_> = coeffs.iter().map(|a| a.to_repr()).collect();
+pub fn serial_multiexp<C: CurveAffine>(coeffs: &[C::Scalar], bases: &[C]) -> C::Curve {
     let mut acc = C::Curve::identity();
 
     // for byte idx
@@ -62,12 +64,13 @@ pub fn small_multiexp<C: CurveAffine>(coeffs: &[C::Scalar], bases: &[C]) -> C::C
         for bit_idx in (0..8).rev() {
             acc = acc.double();
             // for each coeff
-            for coeff_idx in 0..coeffs.len() {
-                let byte = coeffs[coeff_idx].as_ref()[byte_idx];
+            coeffs.iter().enumerate().for_each(|(i, coeff)| {
+                let coeff = coeff.to_repr();
+                let byte = coeff.as_ref()[byte_idx];
                 if ((byte >> bit_idx) & 1) != 0 {
-                    acc += bases[coeff_idx];
+                    acc += bases[i];
                 }
-            }
+            });
         }
     }
 
@@ -82,23 +85,10 @@ pub fn small_multiexp<C: CurveAffine>(coeffs: &[C::Scalar], bases: &[C]) -> C::C
 pub fn best_multiexp<C: CurveAffine>(coeffs: &[C::Scalar], bases: &[C]) -> C::Curve {
     assert_eq!(coeffs.len(), bases.len());
 
-    let num_threads = multicore::current_num_threads();
-    if coeffs.len() > num_threads {
-        let chunk = coeffs.len() / num_threads;
-        let num_chunks = coeffs.chunks(chunk).len();
-        let mut results = vec![C::Curve::identity(); num_chunks];
-        coeffs
-            .par_chunks(chunk)
-            .zip(bases.par_chunks(chunk))
-            .zip(results.par_iter_mut())
-            .for_each(|((coeffs, bases), acc)| {
-                multiexp_serial(coeffs, bases, acc);
-            });
-        results.iter().fold(C::Curve::identity(), |a, b| a + b)
+    if coeffs.len() > threads() {
+        parallel_multiexp(coeffs, bases)
     } else {
-        let mut acc = C::Curve::identity();
-        multiexp_serial(coeffs, bases, &mut acc);
-        acc
+        serial_multiexp(coeffs, bases)
     }
 }
 
@@ -388,13 +378,13 @@ fn test_lagrange_interpolate() {
 
 #[test]
 fn test_multi_exponentiation() {
-    for k in 3..8 {
+    for k in 3..10 {
         let coeffs = (0..(1 << k)).map(|_| Fp::random(OsRng)).collect::<Vec<_>>();
         let params: Params<EqAffine> = Params::new(k);
         let g_a = &mut params.get_g();
         let g_b = &mut params.get_g();
 
-        let point_a = small_multiexp(&coeffs, &g_a);
+        let point_a = serial_multiexp(&coeffs, &g_a);
         let point_b = best_multiexp(&coeffs, &g_b);
 
         assert_eq!(point_a, point_b);
