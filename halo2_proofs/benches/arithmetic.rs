@@ -27,7 +27,7 @@ fn criterion_benchmark(c: &mut Criterion) {
                     serial_multiexp(&[black_box(coeff_1), black_box(coeff_2)], &[*g_lo, *g_hi]);
                 }
             })
-        });
+        }).sample_size(30);
     }
     small_group.finish();
 
@@ -47,7 +47,7 @@ fn criterion_benchmark(c: &mut Criterion) {
                     best_multiexp(&[black_box(coeff_1), black_box(coeff_2)], &[*g_lo, *g_hi]);
                 }
             })
-        });
+        }).sample_size(30);
     }
     best_group.finish();
 }
