@@ -48,25 +48,23 @@ fn parallel_multiexp<C: CurveAffine>(coeffs: &[C::Scalar], bases: &[C]) -> C::Cu
 /// Performs a small multi-exponentiation operation.
 /// Uses the double-and-add algorithm with doublings shared across points.
 pub fn serial_multiexp<C: CurveAffine>(coeffs: &[C::Scalar], bases: &[C]) -> C::Curve {
-    let mut acc = C::Curve::identity();
-
     // for byte idx
-    for byte_idx in (0..32).rev() {
-        // for bit idx
-        for bit_idx in (0..8).rev() {
-            acc = acc.double();
-            // for each coeff
-            coeffs.iter().enumerate().for_each(|(i, coeff)| {
-                let coeff = coeff.to_repr();
-                let byte = coeff.as_ref()[byte_idx];
-                if ((byte >> bit_idx) & 1) != 0 {
-                    acc += bases[i];
-                }
+    (0..32)
+        .rev()
+        .fold(C::Curve::identity(), |mut acc, byte_idx| {
+            // for bit idx
+            (0..8).rev().for_each(|bit_idx| {
+                acc = acc.double();
+                // for each coeff
+                coeffs.iter().zip(bases.iter()).for_each(|(coeff, base)| {
+                    let byte = coeff.to_repr().as_ref()[byte_idx];
+                    if ((byte >> bit_idx) & 1) != 0 {
+                        acc += base;
+                    }
+                });
             });
-        }
-    }
-
-    acc
+            acc
+        })
 }
 
 /// Performs a multi-exponentiation operation.
