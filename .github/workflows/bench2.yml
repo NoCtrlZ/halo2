@@ -12,4 +12,4 @@ jobs:
           toolchain: 1.56.1
           override: true
       - name: Run benchmark
-        run: cargo bench fft
+        run: cargo bench multiexp
