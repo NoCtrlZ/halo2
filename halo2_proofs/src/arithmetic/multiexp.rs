@@ -114,6 +114,23 @@ fn get_at<F: PrimeField>(segment: usize, c: usize, bytes: &F::Repr) -> usize {
     (tmp % (1 << c)) as usize
 }
 
+struct Multiexp<G, S> {
+    wnaf: Vec<Wnaf<G, S>>
+}
+
+struct Wnaf<G, S> {
+    base: G,
+    coeff: S,
+    table: Vec<G>
+}
+
+impl<G: Group> Wnaf<G, G::Scalar> {
+    fn new(base: G, coeff: G::Scalar, w: i64) -> Self {
+        let table = vec![base];
+        Wnaf { base, coeff, table }
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::{multiexp_serial, small_multiexp};
