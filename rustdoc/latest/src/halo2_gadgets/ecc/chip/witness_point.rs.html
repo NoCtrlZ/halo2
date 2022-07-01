@@ -1,5 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `halo2_gadgets/src/ecc/chip/witness_point.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>witness_point.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script src="../../../../crates.js"></script><script defer src="../../../../main.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script>
-    <noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `halo2_gadgets/src/ecc/chip/witness_point.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>witness_point.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.js"                  integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/contrib/auto-render.min.js"    integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"></script>
 <script>
@@ -18,7 +17,7 @@
         </a><h2 class="location"></h2>
     </nav>
     <nav class="sidebar"><a class="sidebar-logo" href="../../../../halo2_gadgets/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../halo2_gadgets/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
+        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../halo2_gadgets/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
                                 <a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div>
                         </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
@@ -194,27 +193,23 @@
 <span id="172">172</span>
 <span id="173">173</span>
 <span id="174">174</span>
-<span id="175">175</span>
-<span id="176">176</span>
-<span id="177">177</span>
-<span id="178">178</span>
-<span id="179">179</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">EccPoint</span>, <span class="ident">NonIdentityEccPoint</span>};
 
 <span class="kw">use</span> <span class="ident">group::prime::PrimeCurveAffine</span>;
 
 <span class="kw">use</span> <span class="ident">halo2_proofs</span>::{
-    <span class="ident">circuit</span>::{<span class="ident">AssignedCell</span>, <span class="ident">Region</span>},
+    <span class="ident">circuit</span>::{<span class="ident">AssignedCell</span>, <span class="ident">Region</span>, <span class="ident">Value</span>},
     <span class="ident">plonk</span>::{
-        <span class="ident">Advice</span>, <span class="ident">Column</span>, <span class="ident">ConstraintSystem</span>, <span class="ident">Constraints</span>, <span class="ident">Error</span>, <span class="ident">Expression</span>, <span class="ident">Selector</span>, <span class="ident">VirtualCells</span>,
+        <span class="ident">Advice</span>, <span class="ident">Assigned</span>, <span class="ident">Column</span>, <span class="ident">ConstraintSystem</span>, <span class="ident">Constraints</span>, <span class="ident">Error</span>, <span class="ident">Expression</span>, <span class="ident">Selector</span>,
+        <span class="ident">VirtualCells</span>,
     },
     <span class="ident">poly::Rotation</span>,
 };
 <span class="kw">use</span> <span class="ident">pasta_curves</span>::{<span class="ident">arithmetic::CurveAffine</span>, <span class="ident">pallas</span>};
 
 <span class="kw">type</span> <span class="ident">Coordinates</span> <span class="op">=</span> (
-    <span class="ident">AssignedCell</span><span class="op">&lt;</span><span class="ident">pallas::Base</span>, <span class="ident">pallas::Base</span><span class="op">&gt;</span>,
-    <span class="ident">AssignedCell</span><span class="op">&lt;</span><span class="ident">pallas::Base</span>, <span class="ident">pallas::Base</span><span class="op">&gt;</span>,
+    <span class="ident">AssignedCell</span><span class="op">&lt;</span><span class="ident">Assigned</span><span class="op">&lt;</span><span class="ident">pallas::Base</span><span class="op">&gt;</span>, <span class="ident">pallas::Base</span><span class="op">&gt;</span>,
+    <span class="ident">AssignedCell</span><span class="op">&lt;</span><span class="ident">Assigned</span><span class="op">&lt;</span><span class="ident">pallas::Base</span><span class="op">&gt;</span>, <span class="ident">pallas::Base</span><span class="op">&gt;</span>,
 );
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
@@ -287,19 +282,17 @@
 
     <span class="kw">fn</span> <span class="ident">assign_xy</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">value</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">pallas::Base</span>, <span class="ident">pallas::Base</span>)<span class="op">&gt;</span>,
+        <span class="ident">value</span>: <span class="ident">Value</span><span class="op">&lt;</span>(<span class="ident">Assigned</span><span class="op">&lt;</span><span class="ident">pallas::Base</span><span class="op">&gt;</span>, <span class="ident">Assigned</span><span class="op">&lt;</span><span class="ident">pallas::Base</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
         <span class="ident">offset</span>: <span class="ident">usize</span>,
         <span class="ident">region</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Region</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">pallas::Base</span><span class="op">&gt;</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Coordinates</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="comment">// Assign `x` value</span>
         <span class="kw">let</span> <span class="ident">x_val</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">value</span><span class="op">|</span> <span class="ident">value</span>.<span class="number">0</span>);
-        <span class="kw">let</span> <span class="ident">x_var</span> <span class="op">=</span>
-            <span class="ident">region</span>.<span class="ident">assign_advice</span>(<span class="op">|</span><span class="op">|</span> <span class="string">&quot;x&quot;</span>, <span class="self">self</span>.<span class="ident">x</span>, <span class="ident">offset</span>, <span class="op">|</span><span class="op">|</span> <span class="ident">x_val</span>.<span class="ident">ok_or</span>(<span class="ident">Error::Synthesis</span>))<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">x_var</span> <span class="op">=</span> <span class="ident">region</span>.<span class="ident">assign_advice</span>(<span class="op">|</span><span class="op">|</span> <span class="string">&quot;x&quot;</span>, <span class="self">self</span>.<span class="ident">x</span>, <span class="ident">offset</span>, <span class="op">|</span><span class="op">|</span> <span class="ident">x_val</span>)<span class="question-mark">?</span>;
 
         <span class="comment">// Assign `y` value</span>
         <span class="kw">let</span> <span class="ident">y_val</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">value</span><span class="op">|</span> <span class="ident">value</span>.<span class="number">1</span>);
-        <span class="kw">let</span> <span class="ident">y_var</span> <span class="op">=</span>
-            <span class="ident">region</span>.<span class="ident">assign_advice</span>(<span class="op">|</span><span class="op">|</span> <span class="string">&quot;y&quot;</span>, <span class="self">self</span>.<span class="ident">y</span>, <span class="ident">offset</span>, <span class="op">|</span><span class="op">|</span> <span class="ident">y_val</span>.<span class="ident">ok_or</span>(<span class="ident">Error::Synthesis</span>))<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">y_var</span> <span class="op">=</span> <span class="ident">region</span>.<span class="ident">assign_advice</span>(<span class="op">|</span><span class="op">|</span> <span class="string">&quot;y&quot;</span>, <span class="self">self</span>.<span class="ident">y</span>, <span class="ident">offset</span>, <span class="op">|</span><span class="op">|</span> <span class="ident">y_val</span>)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>((<span class="ident">x_var</span>, <span class="ident">y_var</span>))
     }
@@ -307,7 +300,7 @@
     <span class="doccomment">/// Assigns a point that can be the identity.</span>
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">point</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">value</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">pallas::Affine</span><span class="op">&gt;</span>,
+        <span class="ident">value</span>: <span class="ident">Value</span><span class="op">&lt;</span><span class="ident">pallas::Affine</span><span class="op">&gt;</span>,
         <span class="ident">offset</span>: <span class="ident">usize</span>,
         <span class="ident">region</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Region</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">pallas::Base</span><span class="op">&gt;</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">EccPoint</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
@@ -317,10 +310,10 @@
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">value</span><span class="op">|</span> {
             <span class="comment">// Map the identity to (0, 0).</span>
             <span class="kw">if</span> <span class="ident">value</span> <span class="op">==</span> <span class="ident">pallas::Affine::identity</span>() {
-                (<span class="ident">pallas::Base::zero</span>(), <span class="ident">pallas::Base::zero</span>())
+                (<span class="ident">Assigned::Zero</span>, <span class="ident">Assigned::Zero</span>)
             } <span class="kw">else</span> {
                 <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">coordinates</span>().<span class="ident">unwrap</span>();
-                (<span class="kw-2">*</span><span class="ident">value</span>.<span class="ident">x</span>(), <span class="kw-2">*</span><span class="ident">value</span>.<span class="ident">y</span>())
+                (<span class="ident">value</span>.<span class="ident">x</span>().<span class="ident">into</span>(), <span class="ident">value</span>.<span class="ident">y</span>().<span class="ident">into</span>())
             }
         });
 
@@ -331,23 +324,19 @@
     <span class="doccomment">/// Assigns a non-identity point.</span>
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">point_non_id</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">value</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">pallas::Affine</span><span class="op">&gt;</span>,
+        <span class="ident">value</span>: <span class="ident">Value</span><span class="op">&lt;</span><span class="ident">pallas::Affine</span><span class="op">&gt;</span>,
         <span class="ident">offset</span>: <span class="ident">usize</span>,
         <span class="ident">region</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Region</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">pallas::Base</span><span class="op">&gt;</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">NonIdentityEccPoint</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="comment">// Enable `q_point_non_id` selector</span>
         <span class="self">self</span>.<span class="ident">q_point_non_id</span>.<span class="ident">enable</span>(<span class="ident">region</span>, <span class="ident">offset</span>)<span class="question-mark">?</span>;
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">value</span>) <span class="op">=</span> <span class="ident">value</span> {
-            <span class="comment">// Return an error if the point is the identity.</span>
-            <span class="kw">if</span> <span class="ident">value</span> <span class="op">==</span> <span class="ident">pallas::Affine::identity</span>() {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Synthesis</span>);
-            }
-        };
+        <span class="comment">// Return an error if the point is the identity.</span>
+        <span class="ident">value</span>.<span class="ident">error_if_known_and</span>(<span class="op">|</span><span class="ident">value</span><span class="op">|</span> <span class="ident">value</span> <span class="op">==</span> <span class="kw-2">&amp;</span><span class="ident">pallas::Affine::identity</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">value</span><span class="op">|</span> {
             <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">coordinates</span>().<span class="ident">unwrap</span>();
-            (<span class="kw-2">*</span><span class="ident">value</span>.<span class="ident">x</span>(), <span class="kw-2">*</span><span class="ident">value</span>.<span class="ident">y</span>())
+            (<span class="ident">value</span>.<span class="ident">x</span>().<span class="ident">into</span>(), <span class="ident">value</span>.<span class="ident">y</span>().<span class="ident">into</span>())
         });
 
         <span class="self">self</span>.<span class="ident">assign_xy</span>(<span class="ident">value</span>, <span class="ident">offset</span>, <span class="ident">region</span>)
@@ -373,11 +362,11 @@
         <span class="ident">NonIdentityPoint::new</span>(
             <span class="ident">chip</span>,
             <span class="ident">layouter</span>.<span class="ident">namespace</span>(<span class="op">|</span><span class="op">|</span> <span class="string">&quot;witness identity&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="ident">pallas::Affine::identity</span>()),
+            <span class="ident">Value::known</span>(<span class="ident">pallas::Affine::identity</span>()),
         )
         .<span class="ident">expect_err</span>(<span class="string">&quot;witnessing 𝒪 should return an error&quot;</span>);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="halo2_gadgets" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0-nightly (ebbcbfc23 2022-05-27)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="halo2_gadgets" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7425fb293 2022-06-30)" ></div>
 </body></html>

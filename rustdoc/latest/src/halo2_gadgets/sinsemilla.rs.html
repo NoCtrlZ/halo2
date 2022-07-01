@@ -1,5 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `halo2_gadgets/src/sinsemilla.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>sinsemilla.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script src="../../crates.js"></script><script defer src="../../main.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script>
-    <noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `halo2_gadgets/src/sinsemilla.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>sinsemilla.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.js"                  integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/contrib/auto-render.min.js"    integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"></script>
 <script>
@@ -18,7 +17,7 @@
         </a><h2 class="location"></h2>
     </nav>
     <nav class="sidebar"><a class="sidebar-logo" href="../../halo2_gadgets/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../halo2_gadgets/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
+        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../halo2_gadgets/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
                                 <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
                         </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
@@ -775,7 +774,6 @@
 <span id="753">753</span>
 <span id="754">754</span>
 <span id="755">755</span>
-<span id="756">756</span>
 </pre><pre class="rust"><code><span class="doccomment">//! The [Sinsemilla] hash function.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! [Sinsemilla]: https://zips.z.cash/protocol/protocol.pdf#concretesinsemillahash</span>
@@ -784,7 +782,10 @@
     <span class="ident">utilities</span>::{<span class="ident">FieldValue</span>, <span class="ident">RangeConstrained</span>, <span class="ident">Var</span>},
 };
 <span class="kw">use</span> <span class="ident">group::ff</span>::{<span class="ident">Field</span>, <span class="ident">PrimeField</span>};
-<span class="kw">use</span> <span class="ident">halo2_proofs</span>::{<span class="ident">circuit::Layouter</span>, <span class="ident">plonk::Error</span>};
+<span class="kw">use</span> <span class="ident">halo2_proofs</span>::{
+    <span class="ident">circuit</span>::{<span class="ident">Layouter</span>, <span class="ident">Value</span>},
+    <span class="ident">plonk::Error</span>,
+};
 <span class="kw">use</span> <span class="ident">pasta_curves::arithmetic::CurveAffine</span>;
 <span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
 
@@ -845,7 +846,7 @@
     <span class="kw">fn</span> <span class="ident">witness_message_piece</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">layouter</span>: <span class="kw">impl</span> <span class="ident">Layouter</span><span class="op">&lt;</span><span class="ident">C::Base</span><span class="op">&gt;</span>,
-        <span class="ident">value</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">C::Base</span><span class="op">&gt;</span>,
+        <span class="ident">value</span>: <span class="ident">Value</span><span class="op">&lt;</span><span class="ident">C::Base</span><span class="op">&gt;</span>,
         <span class="ident">num_words</span>: <span class="ident">usize</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::MessagePiece</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
 
@@ -889,7 +890,7 @@
     <span class="kw">fn</span> <span class="ident">from_bitstring</span>(
         <span class="ident">chip</span>: <span class="ident">SinsemillaChip</span>,
         <span class="kw-2">mut</span> <span class="ident">layouter</span>: <span class="kw">impl</span> <span class="ident">Layouter</span><span class="op">&lt;</span><span class="ident">C::Base</span><span class="op">&gt;</span>,
-        <span class="ident">bitstring</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">bitstring</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="comment">// Message must be composed of `K`-bit words.</span>
         <span class="macro">assert_eq!</span>(<span class="ident">bitstring</span>.<span class="ident">len</span>() <span class="op">%</span> <span class="ident">K</span>, <span class="number">0</span>);
@@ -963,7 +964,7 @@
     <span class="kw">fn</span> <span class="ident">from_bitstring</span>(
         <span class="ident">chip</span>: <span class="ident">SinsemillaChip</span>,
         <span class="ident">layouter</span>: <span class="kw">impl</span> <span class="ident">Layouter</span><span class="op">&lt;</span><span class="ident">C::Base</span><span class="op">&gt;</span>,
-        <span class="ident">bitstring</span>: <span class="kw-2">&amp;</span>[<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>],
+        <span class="ident">bitstring</span>: <span class="kw-2">&amp;</span>[<span class="ident">Value</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>],
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="comment">// Message must be composed of `K`-bit words.</span>
         <span class="macro">assert_eq!</span>(<span class="ident">bitstring</span>.<span class="ident">len</span>() <span class="op">%</span> <span class="ident">K</span>, <span class="number">0</span>);
@@ -975,8 +976,8 @@
         <span class="macro">assert!</span>(<span class="ident">num_words</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">piece_max_num_words</span> <span class="kw">as</span> <span class="ident">usize</span>);
 
         <span class="comment">// Closure to parse a bitstring (little-endian) into a base field element.</span>
-        <span class="kw">let</span> <span class="ident">to_base_field</span> <span class="op">=</span> <span class="op">|</span><span class="ident">bits</span>: <span class="kw-2">&amp;</span>[<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>]<span class="op">|</span> -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">C::Base</span><span class="op">&gt;</span> {
-            <span class="kw">let</span> <span class="ident">bits</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">bits</span>.<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">collect</span>();
+        <span class="kw">let</span> <span class="ident">to_base_field</span> <span class="op">=</span> <span class="op">|</span><span class="ident">bits</span>: <span class="kw-2">&amp;</span>[<span class="ident">Value</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>]<span class="op">|</span> -&gt; <span class="ident">Value</span><span class="op">&lt;</span><span class="ident">C::Base</span><span class="op">&gt;</span> {
+            <span class="kw">let</span> <span class="ident">bits</span>: <span class="ident">Value</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">bits</span>.<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">collect</span>();
             <span class="ident">bits</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">bits</span><span class="op">|</span> {
                 <span class="ident">bits</span>.<span class="ident">into_iter</span>().<span class="ident">rev</span>().<span class="ident">fold</span>(<span class="ident">C::Base::zero</span>(), <span class="op">|</span><span class="ident">acc</span>, <span class="ident">bit</span><span class="op">|</span> {
                     <span class="kw">if</span> <span class="ident">bit</span> {
@@ -996,7 +997,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_field_elem</span>(
         <span class="ident">chip</span>: <span class="ident">SinsemillaChip</span>,
         <span class="ident">layouter</span>: <span class="kw">impl</span> <span class="ident">Layouter</span><span class="op">&lt;</span><span class="ident">C::Base</span><span class="op">&gt;</span>,
-        <span class="ident">field_elem</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">C::Base</span><span class="op">&gt;</span>,
+        <span class="ident">field_elem</span>: <span class="ident">Value</span><span class="op">&lt;</span><span class="ident">C::Base</span><span class="op">&gt;</span>,
         <span class="ident">num_words</span>: <span class="ident">usize</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="ident">chip</span>.<span class="ident">witness_message_piece</span>(<span class="ident">layouter</span>, <span class="ident">field_elem</span>, <span class="ident">num_words</span>)<span class="question-mark">?</span>;
@@ -1015,22 +1016,19 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_subpieces</span>(
         <span class="ident">chip</span>: <span class="ident">SinsemillaChip</span>,
         <span class="ident">layouter</span>: <span class="kw">impl</span> <span class="ident">Layouter</span><span class="op">&lt;</span><span class="ident">C::Base</span><span class="op">&gt;</span>,
-        <span class="ident">subpieces</span>: <span class="kw">impl</span> <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">RangeConstrained</span><span class="op">&lt;</span><span class="ident">C::Base</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">C::Base</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">subpieces</span>: <span class="kw">impl</span> <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">RangeConstrained</span><span class="op">&lt;</span><span class="ident">C::Base</span>, <span class="ident">Value</span><span class="op">&lt;</span><span class="ident">C::Base</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> (<span class="ident">field_elem</span>, <span class="ident">total_bits</span>) <span class="op">=</span>
-            <span class="ident">subpieces</span>
-                .<span class="ident">into_iter</span>()
-                .<span class="ident">fold</span>((<span class="prelude-val">Some</span>(<span class="ident">C::Base::zero</span>()), <span class="number">0</span>), <span class="op">|</span>(<span class="ident">acc</span>, <span class="ident">bits</span>), <span class="ident">subpiece</span><span class="op">|</span> {
-                    <span class="macro">assert!</span>(<span class="ident">bits</span> <span class="op">&lt;</span> <span class="number">64</span>);
-                    <span class="kw">let</span> <span class="ident">subpiece_shifted</span> <span class="op">=</span> <span class="ident">subpiece</span>
-                        .<span class="ident">inner</span>()
-                        .<span class="ident">value</span>()
-                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">C::Base::from</span>(<span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">bits</span>) <span class="op">*</span> <span class="ident">v</span>);
-                    (
-                        <span class="ident">acc</span>.<span class="ident">zip</span>(<span class="ident">subpiece_shifted</span>).<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">a</span>, <span class="ident">b</span>)<span class="op">|</span> <span class="ident">a</span> <span class="op">+</span> <span class="ident">b</span>),
-                        <span class="ident">bits</span> <span class="op">+</span> <span class="ident">subpiece</span>.<span class="ident">num_bits</span>(),
-                    )
-                });
+        <span class="kw">let</span> (<span class="ident">field_elem</span>, <span class="ident">total_bits</span>) <span class="op">=</span> <span class="ident">subpieces</span>.<span class="ident">into_iter</span>().<span class="ident">fold</span>(
+            (<span class="ident">Value::known</span>(<span class="ident">C::Base::zero</span>()), <span class="number">0</span>),
+            <span class="op">|</span>(<span class="ident">acc</span>, <span class="ident">bits</span>), <span class="ident">subpiece</span><span class="op">|</span> {
+                <span class="macro">assert!</span>(<span class="ident">bits</span> <span class="op">&lt;</span> <span class="number">64</span>);
+                <span class="kw">let</span> <span class="ident">subpiece_shifted</span> <span class="op">=</span> <span class="ident">subpiece</span>
+                    .<span class="ident">inner</span>()
+                    .<span class="ident">value</span>()
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">C::Base::from</span>(<span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">bits</span>) <span class="op">*</span> <span class="ident">v</span>);
+                (<span class="ident">acc</span> <span class="op">+</span> <span class="ident">subpiece_shifted</span>, <span class="ident">bits</span> <span class="op">+</span> <span class="ident">subpiece</span>.<span class="ident">num_bits</span>())
+            },
+        );
 
         <span class="comment">// Message must be composed of `K`-bit words.</span>
         <span class="macro">assert_eq!</span>(<span class="ident">total_bits</span> <span class="op">%</span> <span class="ident">K</span>, <span class="number">0</span>);
@@ -1231,7 +1229,7 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="ident">halo2_proofs</span>::{
-        <span class="ident">circuit</span>::{<span class="ident">Layouter</span>, <span class="ident">SimpleFloorPlanner</span>},
+        <span class="ident">circuit</span>::{<span class="ident">Layouter</span>, <span class="ident">SimpleFloorPlanner</span>, <span class="ident">Value</span>},
         <span class="ident">dev::MockProver</span>,
         <span class="ident">plonk</span>::{<span class="ident">Circuit</span>, <span class="ident">ConstraintSystem</span>, <span class="ident">Error</span>},
     };
@@ -1393,7 +1391,7 @@
                 <span class="kw">let</span> <span class="ident">merkle_crh</span> <span class="op">=</span> <span class="ident">HashDomain::new</span>(<span class="ident">chip1</span>.<span class="ident">clone</span>(), <span class="ident">ecc_chip</span>.<span class="ident">clone</span>(), <span class="kw-2">&amp;</span><span class="ident">TestHashDomain</span>);
 
                 <span class="comment">// Layer 31, l = MERKLE_DEPTH - 1 - layer = 0</span>
-                <span class="kw">let</span> <span class="ident">l_bitstring</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="bool-val">false</span>); <span class="ident">K</span>];
+                <span class="kw">let</span> <span class="ident">l_bitstring</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">Value::known</span>(<span class="bool-val">false</span>); <span class="ident">K</span>];
                 <span class="kw">let</span> <span class="ident">l</span> <span class="op">=</span> <span class="ident">MessagePiece::from_bitstring</span>(
                     <span class="ident">chip1</span>.<span class="ident">clone</span>(),
                     <span class="ident">layouter</span>.<span class="ident">namespace</span>(<span class="op">|</span><span class="op">|</span> <span class="string">&quot;l&quot;</span>),
@@ -1401,8 +1399,9 @@
                 )<span class="question-mark">?</span>;
 
                 <span class="comment">// Left leaf</span>
-                <span class="kw">let</span> <span class="ident">left_bitstring</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span>
-                    (<span class="number">0</span>..<span class="number">250</span>).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="prelude-val">Some</span>(<span class="ident">rand::random</span>::<span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>())).<span class="ident">collect</span>();
+                <span class="kw">let</span> <span class="ident">left_bitstring</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> (<span class="number">0</span>..<span class="number">250</span>)
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Value::known</span>(<span class="ident">rand::random</span>::<span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>()))
+                    .<span class="ident">collect</span>();
                 <span class="kw">let</span> <span class="ident">left</span> <span class="op">=</span> <span class="ident">MessagePiece::from_bitstring</span>(
                     <span class="ident">chip1</span>.<span class="ident">clone</span>(),
                     <span class="ident">layouter</span>.<span class="ident">namespace</span>(<span class="op">|</span><span class="op">|</span> <span class="string">&quot;left&quot;</span>),
@@ -1410,35 +1409,34 @@
                 )<span class="question-mark">?</span>;
 
                 <span class="comment">// Right leaf</span>
-                <span class="kw">let</span> <span class="ident">right_bitstring</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span>
-                    (<span class="number">0</span>..<span class="number">250</span>).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="prelude-val">Some</span>(<span class="ident">rand::random</span>::<span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>())).<span class="ident">collect</span>();
+                <span class="kw">let</span> <span class="ident">right_bitstring</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> (<span class="number">0</span>..<span class="number">250</span>)
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Value::known</span>(<span class="ident">rand::random</span>::<span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>()))
+                    .<span class="ident">collect</span>();
                 <span class="kw">let</span> <span class="ident">right</span> <span class="op">=</span> <span class="ident">MessagePiece::from_bitstring</span>(
                     <span class="ident">chip1</span>.<span class="ident">clone</span>(),
                     <span class="ident">layouter</span>.<span class="ident">namespace</span>(<span class="op">|</span><span class="op">|</span> <span class="string">&quot;right&quot;</span>),
                     <span class="kw-2">&amp;</span><span class="ident">right_bitstring</span>,
                 )<span class="question-mark">?</span>;
 
-                <span class="kw">let</span> <span class="ident">l_bitstring</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">l_bitstring</span>.<span class="ident">into_iter</span>().<span class="ident">collect</span>();
-                <span class="kw">let</span> <span class="ident">left_bitstring</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">left_bitstring</span>.<span class="ident">into_iter</span>().<span class="ident">collect</span>();
-                <span class="kw">let</span> <span class="ident">right_bitstring</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">right_bitstring</span>.<span class="ident">into_iter</span>().<span class="ident">collect</span>();
+                <span class="kw">let</span> <span class="ident">l_bitstring</span>: <span class="ident">Value</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">l_bitstring</span>.<span class="ident">into_iter</span>().<span class="ident">collect</span>();
+                <span class="kw">let</span> <span class="ident">left_bitstring</span>: <span class="ident">Value</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">left_bitstring</span>.<span class="ident">into_iter</span>().<span class="ident">collect</span>();
+                <span class="kw">let</span> <span class="ident">right_bitstring</span>: <span class="ident">Value</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">right_bitstring</span>.<span class="ident">into_iter</span>().<span class="ident">collect</span>();
 
                 <span class="comment">// Witness expected parent</span>
                 <span class="kw">let</span> <span class="ident">expected_parent</span> <span class="op">=</span> {
-                    <span class="kw">let</span> <span class="ident">expected_parent</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> (<span class="prelude-val">Some</span>(<span class="ident">l</span>), <span class="prelude-val">Some</span>(<span class="ident">left</span>), <span class="prelude-val">Some</span>(<span class="ident">right</span>)) <span class="op">=</span>
-                        (<span class="ident">l_bitstring</span>, <span class="ident">left_bitstring</span>, <span class="ident">right_bitstring</span>)
-                    {
-                        <span class="kw">let</span> <span class="ident">merkle_crh</span> <span class="op">=</span> <span class="ident">sinsemilla::HashDomain::from_Q</span>((<span class="kw-2">*</span><span class="ident">Q</span>).<span class="ident">into</span>());
-                        <span class="kw">let</span> <span class="ident">point</span> <span class="op">=</span> <span class="ident">merkle_crh</span>
-                            .<span class="ident">hash_to_point</span>(
-                                <span class="ident">l</span>.<span class="ident">into_iter</span>()
-                                    .<span class="ident">chain</span>(<span class="ident">left</span>.<span class="ident">into_iter</span>())
-                                    .<span class="ident">chain</span>(<span class="ident">right</span>.<span class="ident">into_iter</span>()),
-                            )
-                            .<span class="ident">unwrap</span>();
-                        <span class="prelude-val">Some</span>(<span class="ident">point</span>.<span class="ident">to_affine</span>())
-                    } <span class="kw">else</span> {
-                        <span class="prelude-val">None</span>
-                    };
+                    <span class="kw">let</span> <span class="ident">expected_parent</span> <span class="op">=</span> <span class="ident">l_bitstring</span>.<span class="ident">zip</span>(<span class="ident">left_bitstring</span>.<span class="ident">zip</span>(<span class="ident">right_bitstring</span>)).<span class="ident">map</span>(
+                        <span class="op">|</span>(<span class="ident">l</span>, (<span class="ident">left</span>, <span class="ident">right</span>))<span class="op">|</span> {
+                            <span class="kw">let</span> <span class="ident">merkle_crh</span> <span class="op">=</span> <span class="ident">sinsemilla::HashDomain::from_Q</span>((<span class="kw-2">*</span><span class="ident">Q</span>).<span class="ident">into</span>());
+                            <span class="kw">let</span> <span class="ident">point</span> <span class="op">=</span> <span class="ident">merkle_crh</span>
+                                .<span class="ident">hash_to_point</span>(
+                                    <span class="ident">l</span>.<span class="ident">into_iter</span>()
+                                        .<span class="ident">chain</span>(<span class="ident">left</span>.<span class="ident">into_iter</span>())
+                                        .<span class="ident">chain</span>(<span class="ident">right</span>.<span class="ident">into_iter</span>()),
+                                )
+                                .<span class="ident">unwrap</span>();
+                            <span class="ident">point</span>.<span class="ident">to_affine</span>()
+                        },
+                    );
 
                     <span class="ident">NonIdentityPoint::new</span>(
                         <span class="ident">ecc_chip</span>.<span class="ident">clone</span>(),
@@ -1465,14 +1463,15 @@
                 <span class="kw">let</span> <span class="ident">test_commit</span> <span class="op">=</span>
                     <span class="ident">CommitDomain::new</span>(<span class="ident">chip2</span>.<span class="ident">clone</span>(), <span class="ident">ecc_chip</span>.<span class="ident">clone</span>(), <span class="kw-2">&amp;</span><span class="ident">TestCommitDomain</span>);
                 <span class="kw">let</span> <span class="ident">r_val</span> <span class="op">=</span> <span class="ident">pallas::Scalar::random</span>(<span class="ident">rng</span>);
-                <span class="kw">let</span> <span class="ident">message</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span>
-                    (<span class="number">0</span>..<span class="number">500</span>).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="prelude-val">Some</span>(<span class="ident">rand::random</span>::<span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>())).<span class="ident">collect</span>();
+                <span class="kw">let</span> <span class="ident">message</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> (<span class="number">0</span>..<span class="number">500</span>)
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Value::known</span>(<span class="ident">rand::random</span>::<span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>()))
+                    .<span class="ident">collect</span>();
 
                 <span class="kw">let</span> (<span class="ident">result</span>, <span class="kw">_</span>) <span class="op">=</span> {
                     <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">ScalarFixed::new</span>(
                         <span class="ident">ecc_chip</span>.<span class="ident">clone</span>(),
                         <span class="ident">layouter</span>.<span class="ident">namespace</span>(<span class="op">|</span><span class="op">|</span> <span class="string">&quot;r&quot;</span>),
-                        <span class="prelude-val">Some</span>(<span class="ident">r_val</span>),
+                        <span class="ident">Value::known</span>(<span class="ident">r_val</span>),
                     )<span class="question-mark">?</span>;
                     <span class="kw">let</span> <span class="ident">message</span> <span class="op">=</span> <span class="ident">Message::from_bitstring</span>(
                         <span class="ident">chip2</span>,
@@ -1484,14 +1483,12 @@
 
                 <span class="comment">// Witness expected result.</span>
                 <span class="kw">let</span> <span class="ident">expected_result</span> <span class="op">=</span> {
-                    <span class="kw">let</span> <span class="ident">message</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">message</span>.<span class="ident">into_iter</span>().<span class="ident">collect</span>();
-                    <span class="kw">let</span> <span class="ident">expected_result</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">message</span>) <span class="op">=</span> <span class="ident">message</span> {
+                    <span class="kw">let</span> <span class="ident">message</span>: <span class="ident">Value</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">message</span>.<span class="ident">into_iter</span>().<span class="ident">collect</span>();
+                    <span class="kw">let</span> <span class="ident">expected_result</span> <span class="op">=</span> <span class="ident">message</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">message</span><span class="op">|</span> {
                         <span class="kw">let</span> <span class="ident">domain</span> <span class="op">=</span> <span class="ident">sinsemilla::CommitDomain::new</span>(<span class="ident">PERSONALIZATION</span>);
                         <span class="kw">let</span> <span class="ident">point</span> <span class="op">=</span> <span class="ident">domain</span>.<span class="ident">commit</span>(<span class="ident">message</span>.<span class="ident">into_iter</span>(), <span class="kw-2">&amp;</span><span class="ident">r_val</span>).<span class="ident">unwrap</span>();
-                        <span class="prelude-val">Some</span>(<span class="ident">point</span>.<span class="ident">to_affine</span>())
-                    } <span class="kw">else</span> {
-                        <span class="prelude-val">None</span>
-                    };
+                        <span class="ident">point</span>.<span class="ident">to_affine</span>()
+                    });
 
                     <span class="ident">NonIdentityPoint::new</span>(
                         <span class="ident">ecc_chip</span>,
@@ -1533,5 +1530,5 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="halo2_gadgets" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0-nightly (ebbcbfc23 2022-05-27)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="halo2_gadgets" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7425fb293 2022-06-30)" ></div>
 </body></html>
