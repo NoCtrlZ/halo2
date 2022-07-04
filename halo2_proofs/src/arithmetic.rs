@@ -15,19 +15,17 @@ fn parallel_multiexp<C: CurveAffine>(coeffs: &[C::Scalar], bases: &[C]) -> C::Cu
     let c = (f64::from(bases.len() as u32)).ln().ceil() as usize;
     let mut buckets: Vec<Vec<Bucket<C>>> = vec![vec![Bucket::None; (1 << c) - 1]; (256 / c) + 1];
 
-    buckets
-        .iter_mut()
-        .enumerate()
-        .rev()
-        .map(|(i, bucket)| {
-            for (coeff, base) in coeffs.iter().zip(bases.iter()) {
-                let seg = get_at::<C::Scalar>(i, c, &coeff.to_repr());
-                if seg != 0 {
-                    bucket[seg - 1].add_assign(base);
-                }
+    buckets.iter_mut().enumerate().for_each(|(i, bucket)| {
+        for (coeff, base) in coeffs.iter().zip(bases.iter()) {
+            let seg = get_at::<C::Scalar>(i, c, &coeff.to_repr());
+            if seg != 0 {
+                bucket[seg - 1].add_assign(base);
             }
-            bucket
-        })
+        }
+    });
+
+    buckets
+        .iter()
         .fold(C::Curve::identity(), |mut sum, bucket| {
             for _ in 0..c {
                 sum = sum.double();
